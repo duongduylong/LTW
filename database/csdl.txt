@@ -1,0 +1,155 @@
+
+create table departments(
+department_id int auto_increment,
+primary key(department_id),
+department_code varchar(50) unique not null,
+department_name varchar(100) unique not null
+);
+create table branchs(
+branch_id int auto_increment,
+primary key(branch_id),
+branch_code varchar(50) not null,
+branch_name varchar(50) not null,
+department_id int not null,
+FOREIGN KEY (department_id) REFERENCES departments(department_id)
+);
+create table class_formals(
+class_formal_id int auto_increment,
+primary key(class_formal_id),
+class_number int  not null,
+class_course int  not null,
+branch_id int not null,
+FOREIGN KEY (branch_id) REFERENCES branchs(branch_id),
+teacher_id int not null
+);
+
+create table users(
+user_id int auto_increment,  -- khoa chinh
+primary key(user_id),
+class_formal_id int not null,
+FOREIGN KEY (class_formal_id) REFERENCES class_formals(class_formal_id),
+user_name varchar(50) unique not null,  -- ten dang nhap(msv)
+pass_word varchar(255) not null, -- mat khau
+full_name nvarchar(255) not null, -- ten
+user_role int not null, -- 3 role
+status int not null,
+date_of_birth varchar(255) not null, -- sinh nhat
+gender bit not null, -- gioi tinh
+birthplace varchar(100),
+current_address varchar(100),
+avatar_image_path varchar(100) not null, -- link avatar
+link_social varchar(255) not null, -- link fb...
+description_text varchar(255), -- mo ta
+password_latest int not null, -- mat khau gan nhat
+password_latest_time bigint, -- lan doi mat khau gan nhat
+login_failed int, -- so lan dang nhap sai,
+gpa int not null,
+toeic int not null
+);
+
+create table phone_numbers (
+phone_number_id int auto_increment,
+primary key(phone_number_id),
+user_id int not null,
+FOREIGN KEY (user_id) REFERENCES users(user_id),
+phone_number int not null 
+);
+
+create table emails (
+email_id int auto_increment,
+primary key(email_id),
+user_id int not null,
+FOREIGN KEY (user_id) REFERENCES users(user_id),
+email varchar(255) not null  
+) ;
+
+create table kip_studys(
+kip_study_id int auto_increment,
+primary key(kip_study_id),
+time_start int not null,
+time_study int not null
+);
+create table weeks(
+week_id int auto_increment,
+primary key(week_id),
+week_name int not null,
+start_time datetime not null,
+end_time datetime not null
+);
+create table class_rooms(
+class_room_id int auto_increment,
+primary key(class_room_id),
+class_room_name varchar(50) not null,
+building varchar(50) not null
+);
+
+create table schedules(
+schedule_id int auto_increment,
+primary key(schedule_id),
+schedule_code int not null,
+kip_study_id int not null,
+FOREIGN KEY (kip_study_id) REFERENCES kip_studys(kip_study_id),
+day_study int not null, 
+category varchar(45) ,
+week_id int not null,
+FOREIGN KEY (week_id) REFERENCES weeks(week_id),
+week_id_end int not null,
+class_room_id int not null,
+FOREIGN KEY (class_room_id) REFERENCES class_rooms(class_room_id)
+);
+
+create table subjects(
+subject_id int auto_increment,
+primary key(subject_id),
+subject_code varchar(50) unique not null,
+subject_name varchar(100) unique not null,
+credit int not null, 
+price_credit int not null
+);
+
+create table subject_semesters(
+subject_semester_id int auto_increment,
+primary key(subject_semester_id),
+subject_semester_name int not null,
+subject_id int not null,
+FOREIGN KEY (subject_id) REFERENCES subjects(subject_id),
+branch_id int not null,
+FOREIGN KEY (branch_id) REFERENCES branchs(branch_id)
+);
+create table class_credits(
+class_credit_id int auto_increment,
+primary key(class_credit_id),
+class_credit_name varchar(50) not null,
+subject_id int not null,
+FOREIGN KEY (subject_id) REFERENCES subjects(subject_id),
+group_class	int not null,
+schedule_id int not null,
+FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id),
+student_max int,
+teacher_max int,
+tutors_max int
+);
+create table registers(
+register_id int auto_increment,
+primary key(register_id),
+class_credit_id int not null,
+FOREIGN KEY (class_credit_id) REFERENCES class_credits(class_credit_id),
+user_id int not null,
+FOREIGN KEY (user_id) REFERENCES users(user_id),
+register_time datetime not null
+);
+
+create table news(
+new_id int auto_increment,
+primary key (new_id),
+new_title varchar(250) not null,
+new_body text not null,
+time datetime not null);
+
+
+
+
+
+
+
+
